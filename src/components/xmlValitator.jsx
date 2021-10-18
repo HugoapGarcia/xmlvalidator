@@ -89,7 +89,8 @@ const XmlComponent = () => {
 
         data.getElementsByTagName("users")[0].appendChild(chat);
 
-        console.log(data); //check the updated new XML
+        //check the updated new XML
+        //console.log(data); 
         sendXML(data, 'newXML');
 
         // showing updated users
@@ -115,8 +116,9 @@ const XmlComponent = () => {
                 // parse string
                 return (new window.DOMParser()).parseFromString(str, "text/xml")
             }).then(xml => {
-                console.log(xml);
+                //console.log(xml);
                 let xmlData = new XMLSerializer().serializeToString(xml);
+                
                 // convert xml object to json.
                 // pass optiom to lib : [compact, ignoreAttributes, spaces]
                 const options = { compact: true, ignoreAttributes: true, spaces: 4 };
