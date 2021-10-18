@@ -219,7 +219,6 @@ const XmlComponent = () => {
             <div className="child">
                 <h2>Generated Valid XML :</h2>
                 <XMLViewer className='newXmlbox' xml={newComplexXML} />
-
             </div>
         </div>
     </>
