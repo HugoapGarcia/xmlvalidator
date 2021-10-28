@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import "../index.css";
 import XMLViewer from 'react-xml-viewer'
 import convert from 'xml-js';
@@ -10,6 +10,10 @@ const XmlComponent = () => {
     const [complexXML, setComplexXML] = useState('');
     const [newComplexXML, setNewComplexXML] = useState('');
 
+    const video = useRef(null);
+    const playbutton = useRef(null);
+
+    
     /*** Retreive XML File */
     function getXML() {
         let url = 'https://hugoapgarcia.github.io/structure/user.xml';
@@ -118,7 +122,7 @@ const XmlComponent = () => {
             }).then(xml => {
                 //console.log(xml);
                 let xmlData = new XMLSerializer().serializeToString(xml);
-                
+
                 // convert xml object to json.
                 // pass optiom to lib : [compact, ignoreAttributes, spaces]
                 const options = { compact: true, ignoreAttributes: true, spaces: 4 };
@@ -184,6 +188,59 @@ const XmlComponent = () => {
 
     }
 
+    /**
+  * @function playAutoVideoPromise
+  * @description Check and play video with promise 
+  */
+    async function playAutoVideoPromise() {
+       
+
+        try {
+            await video.current.play()
+                .then(() => {
+                    console.log('Autoplay started');
+
+                    playbutton.current.style.display = 'none'
+
+                    //document.getElementById('play').style.display = 'none';
+                })
+                .catch((error) => {
+                    // Autoplay was prevented.
+                    // Show a "Play" button so that user can start playback.
+                    console.log('Autoplay was prevented');
+
+                    if (playbutton.current) playbutton.current.style.display = 'block';
+
+
+                    //document.getElementById('play').style.display = 'block';
+                    document.getElementById('play').addEventListener('click', playButton);
+                });
+
+
+        } catch (err) {
+            console.log('[Eroro-Video]:', err);
+        }
+
+    }
+
+    /**
+      * @function playButton
+      * @description onclick playbutton listener that activate video to play.
+      */
+    function playButton() {
+        //document.querySelector('#video').load();
+        // document.querySelector('#video').play();
+       // if (video.current) video.current.load();
+        setTimeout(function () {
+            if (video.current) video.current.play();
+        }, 200);
+
+        if (playbutton.current) playbutton.current.style.display = 'none';
+    }
+
+    useEffect(() => {
+        playAutoVideoPromise();
+    },[])
 
 
     return (<>
@@ -221,6 +278,18 @@ const XmlComponent = () => {
                 <XMLViewer className='newXmlbox' xml={newComplexXML} />
             </div>
         </div>
+        <hr />
+        {/* <div>
+            <video  ref={video} autoPlay={true} playsInline muted={false}>
+                <source src='https://d28z8i57b3adv3.cloudfront.net/assets/T360/T360Theater_Intro/t360_intro.webm' type="video/webm" />
+                <source src='https://d28z8i57b3adv3.cloudfront.net/assets/T360/T360Theater_Intro/t360_intro.mov' type='video/mp4; codecs="hvc1"' />
+                Your browser does not support the video tag.
+            </video>
+
+            <div id="play">
+                <button ref={playbutton} onClick={(e) => playAutoVideoPromise()}></button>
+            </div>
+        </div> */}
     </>
     )
 
